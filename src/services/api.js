@@ -1,5 +1,10 @@
 const BASE_URL = process.env.REACT_APP_API_URL;
 
+// Keep Render backend alive (prevents 60s cold start on free tier)
+setInterval(() => {
+  fetch(`${BASE_URL}/health`).catch(() => {});
+}, 10 * 60 * 1000);
+
 export async function signup(name, email, password) {
   const res = await fetch(`${BASE_URL}/signup`, {
     method: 'POST',
