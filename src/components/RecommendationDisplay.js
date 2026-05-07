@@ -37,7 +37,7 @@ export default function RecommendationDisplay({ text }) {
     }
 
     if (/^\d+[.)]\s/.test(trimmed)) {
-      const num     = trimmed.match(/^(\d+)/)[1];
+      const num = trimmed.match(/^(\d+)/)[1];
       const content = trimmed.replace(/^\d+[.)]\s+/, '');
       elements.push(
         <div key={i} style={{
@@ -47,8 +47,7 @@ export default function RecommendationDisplay({ text }) {
           <div style={{
             minWidth: '28px', height: '28px',
             background: 'linear-gradient(135deg, #6B0F1A, #9B1A2A)',
-            border: '1px solid #C9A84C55',
-            borderRadius: '50%',
+            border: '1px solid #C9A84C55', borderRadius: '50%',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontFamily: "'Cinzel', serif", fontSize: '11px', color: '#F0D080',
             flexShrink: 0, marginTop: '2px',
@@ -81,21 +80,6 @@ export default function RecommendationDisplay({ text }) {
           }}>
             {renderInline(content)}
           </div>
-        </div>
-      );
-      i++;
-      continue;
-    }
-
-    if (/^\*\*[^*]+\*\*[:\s]?$/.test(trimmed) || /^\*\*[^*]+:\*\*$/.test(trimmed)) {
-      const text2 = trimmed.replace(/\*\*/g, '').replace(/:$/, '');
-      elements.push(
-        <div key={i} style={{
-          fontFamily: "'Cinzel', serif",
-          fontSize: '13px', color: '#C9A84C',
-          letterSpacing: '2px', marginTop: '20px', marginBottom: '8px',
-        }}>
-          ✦ {text2.toUpperCase()}
         </div>
       );
       i++;
@@ -158,7 +142,8 @@ function renderInline(text) {
     } else if (raw.startsWith('`')) {
       parts.push(
         <code key={match.index} style={{
-          background: '#C9A84C18', border: '1px solid #C9A84C33',
+          background: '#C9A84C18',
+          border: '1px solid #C9A84C33',
           borderRadius: '4px', padding: '1px 8px',
           fontFamily: 'monospace', fontSize: '14px', color: '#F0D080',
         }}>
@@ -171,6 +156,5 @@ function renderInline(text) {
   }
 
   if (last < text.length) parts.push(text.slice(last));
-
   return parts.length === 1 && typeof parts[0] === 'string' ? parts[0] : parts;
 }
