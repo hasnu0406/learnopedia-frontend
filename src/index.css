@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -6,53 +6,32 @@
   --gold: #C9A84C;
   --gold-light: #F0D080;
   --gold-dark: #8B6914;
-  --maroon: #6B0F1A;
-  --maroon-dark: #3D0008;
-  --navy: #0D1B2A;
-  --navy-mid: #1B2A3B;
-  --parchment: #F2E8D0;
-  --parchment-dark: #D4C5A0;
-  --cream: #F5E6C8;
   --black: #080808;
-  --purple: #4A0E5C;
-  --green-sl: #1A3A2A;
+  --black-card: #111111;
+  --text-cream: #F5E6C8;
 }
 
 body {
-  background: var(--black);
-  color: var(--cream);
+  background-color: var(--black);
+  color: var(--text-cream);
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
   cursor: none;
 }
 
-* { cursor: none !important; }
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #0D0D0D; }
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C9A84C, #8B6914);
-  border-radius: 4px;
+@media (max-width: 768px) {
+  body { cursor: auto !important; }
+  * { cursor: auto !important; }
 }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.8; }
-  94% { opacity: 1; }
-  96% { opacity: 0.9; }
-  97% { opacity: 1; }
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #8B6914; border-radius: 3px; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50% { transform: translateY(-18px) rotate(3deg); }
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes wandGlow {
@@ -63,14 +42,4 @@ body {
 @keyframes starTwinkle {
   0%, 100% { opacity: 0.2; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
-}
-
-@keyframes scrollParchment {
-  from { background-position: 0 0; }
-  to { background-position: 0 100px; }
-}
-
-@keyframes cauldronBubble {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(1.05); }
 }

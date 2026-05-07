@@ -7,23 +7,30 @@ import Dashboard from './pages/Dashboard';
 import LearningPath from './pages/LearningPath';
 import Profile from './pages/Profile';
 import CursorFX from './components/CursorFX';
+import './App.css';
 
 function PrivateRoute({ children }) {
   return localStorage.getItem('token') ? children : <Navigate to="/login" />;
 }
 
+function DesktopCursor() {
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) return null;
+  return <CursorFX />;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <CursorFX />
+      <DesktopCursor />
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/"              element={<Landing />} />
+        <Route path="/login"         element={<Login />} />
+        <Route path="/signup"        element={<Signup />} />
+        <Route path="/dashboard"     element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/learning-path" element={<PrivateRoute><LearningPath /></PrivateRoute>} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/profile"       element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="*"              element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
