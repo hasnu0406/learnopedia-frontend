@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 export default function CursorFX() {
   const wandRef = useRef(null);
-  const sparklesRef = useRef([]);
+
 
   useEffect(() => {
     const wand = wandRef.current;
