@@ -16,7 +16,6 @@ body {
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
-  /* Do NOT put cursor:none here — JS handles it */
 }
 
 ::-webkit-scrollbar       { width: 6px; }

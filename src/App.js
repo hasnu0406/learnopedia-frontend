@@ -17,12 +17,9 @@ function SmartCursor() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    // Only show custom cursor if device has a real mouse
-    const hasTouch    = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isMobile    = window.innerWidth <= 768;
-    const hasMouse    = window.matchMedia('(pointer: fine)').matches;
-
-    if (!hasTouch && !isMobile && hasMouse) {
+    const isTouch  = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+    const hasMouse = window.matchMedia('(pointer: fine)').matches;
+    if (hasMouse && !isTouch) {
       setShow(true);
     }
   }, []);

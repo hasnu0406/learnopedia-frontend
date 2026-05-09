@@ -8,8 +8,8 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const navigate  = useNavigate();
-  const location  = useLocation();
+  const navigate   = useNavigate();
+  const location   = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -20,15 +20,14 @@ export default function Sidebar() {
   return (
     <>
       {/* ══ DESKTOP SIDEBAR ══ */}
-      <div style={{
+      <div className="desktop-sidebar" style={{
         width: '240px', minHeight: '100vh',
         background: '#0C0C0C',
         borderRight: '1px solid #C9A84C18',
         display: 'flex', flexDirection: 'column',
         padding: '36px 0',
         position: 'fixed', left: 0, top: 0, bottom: 0, zIndex: 100,
-      }} className="desktop-sidebar">
-
+      }}>
         <div style={{ textAlign: 'center', marginBottom: '44px', padding: '0 20px' }}>
           <div style={{ fontSize: '28px', marginBottom: '6px' }}>⚡</div>
           <div style={{
@@ -41,7 +40,7 @@ export default function Sidebar() {
           <div style={{
             fontFamily: "'Cinzel', serif", fontSize: '8px',
             color: '#C9A84C88', letterSpacing: '3px', marginTop: '4px',
-          }}>GATEWAY OF MAGICAL GUIDANCE</div>
+          }}>SCHOOL OF MAGIC</div>
           <div style={{
             width: '60px', height: '1px', margin: '12px auto 0',
             background: 'linear-gradient(90deg, transparent, #C9A84C44, transparent)',
@@ -62,7 +61,7 @@ export default function Sidebar() {
                 color: active ? '#F0D080' : '#7A6A4A',
                 fontFamily: "'Cinzel', serif",
                 fontSize: '11px', letterSpacing: '1.5px',
-                cursor: 'none', transition: 'all 0.25s', textAlign: 'left',
+                cursor: 'pointer', transition: 'all 0.25s', textAlign: 'left',
               }}>
                 <span style={{ fontSize: '18px' }}>{item.icon}</span>
                 <span>{item.label}</span>
@@ -84,7 +83,7 @@ export default function Sidebar() {
             background: 'transparent', border: '1px solid #C9A84C33',
             borderRadius: '8px', color: '#C9A84C',
             fontFamily: "'Cinzel', serif",
-            fontSize: '10px', letterSpacing: '2px', cursor: 'none',
+            fontSize: '10px', letterSpacing: '2px', cursor: 'pointer',
           }}>
             🚪 LOGOUT
           </button>
