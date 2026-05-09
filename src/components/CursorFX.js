@@ -1,27 +1,38 @@
 import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 export default function CursorFX() {
   const dotRef = useRef(null);
 
   useEffect(() => {
-    // Don't show custom cursor on touch/mobile devices
+    // Never show custom cursor on touch/mobile devices
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return;
 
     const dot = dotRef.current;
     if (!dot) return;
 
-    document.body.style.cursor = 'none';
+    // Hide all cursors via a global style tag — survives page navigation
+    let styleTag = document.getElementById('cursor-hide-style');
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = 'cursor-hide-style';
+      styleTag.innerHTML = `* { cursor: none !important; }`;
+      document.head.appendChild(styleTag);
+    }
 
-    const allElements = document.querySelectorAll('*');
-    allElements.forEach(el => {
-      el.style.cursor = 'none';
-    });
+    let rafId;
+    let mouseX = -100, mouseY = -100;
 
     const move = (e) => {
-      dot.style.left    = e.clientX + 'px';
-      dot.style.top     = e.clientY + 'px';
-      dot.style.opacity = '1';
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        dot.style.opacity   = '1';
+      });
     };
 
     const down = () => {
@@ -38,40 +49,53 @@ export default function CursorFX() {
       dot.style.boxShadow  = '0 0 8px 4px #F0D080, 0 0 20px 8px #C9A84C88, 0 0 36px 12px #C9A84C33';
     };
 
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mousedown', down);
-    window.addEventListener('mouseup',   up);
+    // Hide cursor when leaving window
+    const leave = () => { dot.style.opacity = '0'; };
+    const enter = () => { dot.style.opacity = '1'; };
+
+    window.addEventListener('mousemove',  move);
+    window.addEventListener('mousedown',  down);
+    window.addEventListener('mouseup',    up);
+    document.addEventListener('mouseleave', leave);
+    document.addEventListener('mouseenter', enter);
 
     return () => {
-      document.body.style.cursor = 'auto';
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mousedown', down);
-      window.removeEventListener('mouseup',   up);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove',  move);
+      window.removeEventListener('mousedown',  down);
+      window.removeEventListener('mouseup',    up);
+      document.removeEventListener('mouseleave', leave);
+      document.removeEventListener('mouseenter', enter);
+      // Remove style tag on full unmount
+      if (styleTag) styleTag.remove();
     };
   }, []);
 
-  // On touch devices, render nothing
-  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  if (isTouchDevice) return null;
+  // Don't render anything on touch devices
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) return null;
 
-  return (
+  // Render cursor dot directly into document.body via portal
+  // so it's never clipped or hidden by any parent component
+  return createPortal(
     <div
       ref={dotRef}
       style={{
-        position:      'fixed',
-        top:           '-50px',
-        left:          '-50px',
-        width:         '14px',
-        height:        '14px',
-        background:    'radial-gradient(circle, #FFFFFF 0%, #F0D080 40%, #C9A84C 100%)',
-        borderRadius:  '50%',
-        pointerEvents: 'none',
-        zIndex:        2147483647,
-        opacity:       0,
-        boxShadow:     '0 0 8px 4px #F0D080, 0 0 20px 8px #C9A84C88, 0 0 36px 12px #C9A84C33',
-        transition:    'width 0.1s ease, height 0.1s ease, opacity 0.3s ease, background 0.1s ease',
-        transform:     'translate(-50%, -50%)',
+        position:        'fixed',
+        top:             '-7px',
+        left:            '-7px',
+        width:           '14px',
+        height:          '14px',
+        background:      'radial-gradient(circle, #FFFFFF 0%, #F0D080 40%, #C9A84C 100%)',
+        borderRadius:    '50%',
+        pointerEvents:   'none',
+        zIndex:          2147483647,
+        opacity:         0,
+        boxShadow:       '0 0 8px 4px #F0D080, 0 0 20px 8px #C9A84C88, 0 0 36px 12px #C9A84C33',
+        transition:      'width 0.1s ease, height 0.1s ease, opacity 0.3s ease, background 0.1s ease',
+        transform:       'translate(-100px, -100px)',
+        willChange:      'transform',
       }}
-    />
+    />,
+    document.body
   );
 }
