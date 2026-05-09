@@ -10,24 +10,13 @@
   --text-cream: #F5E6C8;
 }
 
-/* Desktop — hide default cursor */
-@media (hover: hover) and (pointer: fine) {
-  body { cursor: none !important; }
-  * { cursor: none !important; }
-}
-
-/* Mobile/touch — show normal cursor */
-@media (hover: none), (pointer: coarse) {
-  body { cursor: auto !important; }
-  * { cursor: auto !important; }
-}
-
 body {
   background-color: var(--black);
   color: var(--text-cream);
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
+  /* Do NOT put cursor:none here — JS handles it */
 }
 
 ::-webkit-scrollbar       { width: 6px; }

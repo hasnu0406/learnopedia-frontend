@@ -13,24 +13,28 @@ function PrivateRoute({ children }) {
   return localStorage.getItem('token') ? children : <Navigate to="/login" />;
 }
 
-function DesktopCursor() {
-  const [isMobile, setIsMobile] = useState(false);
+function SmartCursor() {
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    // Only show custom cursor if device has a real mouse
+    const hasTouch    = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobile    = window.innerWidth <= 768;
+    const hasMouse    = window.matchMedia('(pointer: fine)').matches;
+
+    if (!hasTouch && !isMobile && hasMouse) {
+      setShow(true);
+    }
   }, []);
 
-  if (isMobile) return null;
+  if (!show) return null;
   return <CursorFX />;
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <DesktopCursor />
+      <SmartCursor />
       <Routes>
         <Route path="/"              element={<Landing />} />
         <Route path="/login"         element={<Login />} />
