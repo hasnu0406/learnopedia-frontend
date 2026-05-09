@@ -8,8 +8,8 @@ const navItems = [
 ];
 
 export default function Sidebar() {
-  const navigate   = useNavigate();
-  const location   = useLocation();
+  const navigate  = useNavigate();
+  const location  = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -92,12 +92,12 @@ export default function Sidebar() {
 
       {/* ══ MOBILE TOP BAR ══ */}
       <div className="mobile-topbar" style={{
-        display: 'none',
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
         background: '#0C0C0C',
         borderBottom: '1px solid #C9A84C22',
         padding: '14px 20px',
         alignItems: 'center', justifyContent: 'space-between',
+        display: 'none',
       }}>
         <div style={{
           fontFamily: "'Cinzel Decorative', cursive", fontSize: '15px',
@@ -106,7 +106,7 @@ export default function Sidebar() {
         }}>
           ⚡ Learnopedia
         </div>
-        <button onClick={() => setMenuOpen(!menuOpen)} style={{
+        <button onClick={() => setMenuOpen(o => !o)} style={{
           background: 'none', border: '1px solid #C9A84C44',
           borderRadius: '6px', padding: '6px 12px',
           color: '#C9A84C', fontSize: '16px', cursor: 'pointer',
@@ -115,54 +115,52 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Mobile dropdown */}
-      {menuOpen && (
-        <div className="mobile-menu" style={{
-          display: 'none',
-          position: 'fixed', top: '56px', left: 0, right: 0, zIndex: 199,
-          background: '#0D0A0A',
-          borderBottom: '1px solid #C9A84C22',
-          padding: '12px',
+      {/* ══ MOBILE DROPDOWN MENU ══ */}
+      <div className="mobile-menu" style={{
+        position: 'fixed', top: '56px', left: 0, right: 0, zIndex: 199,
+        background: '#0D0A0A',
+        borderBottom: '1px solid #C9A84C22',
+        padding: '12px',
+        display: menuOpen ? 'block' : 'none',
+      }}>
+        {navItems.map(item => {
+          const active = location.pathname === item.path;
+          return (
+            <button key={item.path}
+              onClick={() => { navigate(item.path); setMenuOpen(false); }}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center',
+                gap: '12px', padding: '14px 16px', marginBottom: '6px',
+                background: active ? '#C9A84C12' : 'transparent',
+                border: active ? '1px solid #C9A84C33' : '1px solid transparent',
+                borderRadius: '8px',
+                color: active ? '#F0D080' : '#7A6A4A',
+                fontFamily: "'Cinzel', serif", fontSize: '12px',
+                letterSpacing: '1px', cursor: 'pointer', textAlign: 'left',
+              }}>
+              <span>{item.icon}</span><span>{item.label}</span>
+            </button>
+          );
+        })}
+        <button onClick={handleLogout} style={{
+          width: '100%', padding: '12px', marginTop: '6px',
+          background: 'transparent', border: '1px solid #C9A84C22',
+          borderRadius: '8px', color: '#C9A84C',
+          fontFamily: "'Cinzel', serif",
+          fontSize: '11px', letterSpacing: '2px', cursor: 'pointer',
         }}>
-          {navItems.map(item => {
-            const active = location.pathname === item.path;
-            return (
-              <button key={item.path}
-                onClick={() => { navigate(item.path); setMenuOpen(false); }}
-                style={{
-                  width: '100%', display: 'flex', alignItems: 'center',
-                  gap: '12px', padding: '14px 16px', marginBottom: '6px',
-                  background: active ? '#C9A84C12' : 'transparent',
-                  border: active ? '1px solid #C9A84C33' : '1px solid transparent',
-                  borderRadius: '8px',
-                  color: active ? '#F0D080' : '#7A6A4A',
-                  fontFamily: "'Cinzel', serif", fontSize: '12px',
-                  letterSpacing: '1px', cursor: 'pointer', textAlign: 'left',
-                }}>
-                <span>{item.icon}</span><span>{item.label}</span>
-              </button>
-            );
-          })}
-          <button onClick={handleLogout} style={{
-            width: '100%', padding: '12px', marginTop: '6px',
-            background: 'transparent', border: '1px solid #C9A84C22',
-            borderRadius: '8px', color: '#C9A84C',
-            fontFamily: "'Cinzel', serif",
-            fontSize: '11px', letterSpacing: '2px', cursor: 'pointer',
-          }}>
-            🚪 LOGOUT
-          </button>
-        </div>
-      )}
+          🚪 LOGOUT
+        </button>
+      </div>
 
       {/* ══ MOBILE BOTTOM NAV ══ */}
       <div className="mobile-bottomnav" style={{
-        display: 'none',
         position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200,
         background: '#0C0C0C',
         borderTop: '1px solid #C9A84C22',
         padding: '8px 0 12px',
         justifyContent: 'space-around', alignItems: 'center',
+        display: 'none',
       }}>
         {navItems.map(item => {
           const active = location.pathname === item.path;
@@ -204,7 +202,6 @@ export default function Sidebar() {
           .desktop-sidebar  { display: none !important; }
           .mobile-topbar    { display: flex !important; }
           .mobile-bottomnav { display: flex !important; }
-          .mobile-menu      { display: block !important; }
         }
       `}</style>
     </>
