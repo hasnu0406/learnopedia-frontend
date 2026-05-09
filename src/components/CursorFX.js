@@ -1,10 +1,13 @@
 import { useEffect, useRef } from 'react';
 
 export default function CursorFX() {
-  return null;
-}
+  const dotRef = useRef(null);
 
   useEffect(() => {
+    // Don't show custom cursor on touch/mobile devices
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return;
+
     const dot = dotRef.current;
     if (!dot) return;
 
@@ -22,17 +25,17 @@ export default function CursorFX() {
     };
 
     const down = () => {
-      dot.style.width     = '22px';
-      dot.style.height    = '22px';
+      dot.style.width      = '22px';
+      dot.style.height     = '22px';
       dot.style.background = 'radial-gradient(circle, #FFFFFF 0%, #FFFFFF 30%, #F0D080 60%, #C9A84C 100%)';
-      dot.style.boxShadow = '0 0 20px 10px #FFFFFF, 0 0 40px 20px #F0D080, 0 0 60px 30px #C9A84C66';
+      dot.style.boxShadow  = '0 0 20px 10px #FFFFFF, 0 0 40px 20px #F0D080, 0 0 60px 30px #C9A84C66';
     };
 
     const up = () => {
-      dot.style.width     = '14px';
-      dot.style.height    = '14px';
+      dot.style.width      = '14px';
+      dot.style.height     = '14px';
       dot.style.background = 'radial-gradient(circle, #FFFFFF 0%, #F0D080 40%, #C9A84C 100%)';
-      dot.style.boxShadow = '0 0 8px 4px #F0D080, 0 0 20px 8px #C9A84C88, 0 0 36px 12px #C9A84C33';
+      dot.style.boxShadow  = '0 0 8px 4px #F0D080, 0 0 20px 8px #C9A84C88, 0 0 36px 12px #C9A84C33';
     };
 
     window.addEventListener('mousemove', move);
@@ -46,6 +49,10 @@ export default function CursorFX() {
       window.removeEventListener('mouseup',   up);
     };
   }, []);
+
+  // On touch devices, render nothing
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (isTouchDevice) return null;
 
   return (
     <div
