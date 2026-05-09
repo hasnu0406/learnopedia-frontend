@@ -16,7 +16,7 @@ body {
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: auto;
+  /* cursor: auto; ← REMOVED — this was killing the magic cursor */
 }
 
 ::-webkit-scrollbar       { width: 6px; }
