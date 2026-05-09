@@ -16,6 +16,7 @@ body {
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
+  cursor: auto;
 }
 
 ::-webkit-scrollbar       { width: 6px; }

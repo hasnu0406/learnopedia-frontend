@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 export default function CursorFX() {
-  const dotRef = useRef(null);
+  return null;
+}
 
   useEffect(() => {
     const dot = dotRef.current;
