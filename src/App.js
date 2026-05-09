@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Dashboard from './pages/Dashboard';
+import Landing      from './pages/Landing';
+import Login        from './pages/Login';
+import Signup       from './pages/Signup';
+import Dashboard    from './pages/Dashboard';
 import LearningPath from './pages/LearningPath';
-import Profile from './pages/Profile';
-import CursorFX from './components/CursorFX';
+import Profile      from './pages/Profile';
+import CursorFX     from './components/CursorFX';
 import './App.css';
 
 function PrivateRoute({ children }) {
@@ -14,7 +14,15 @@ function PrivateRoute({ children }) {
 }
 
 function DesktopCursor() {
-  const isMobile = window.innerWidth <= 768;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   if (isMobile) return null;
   return <CursorFX />;
 }

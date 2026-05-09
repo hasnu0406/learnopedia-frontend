@@ -3,12 +3,23 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --gold: #C9A84C;
+  --gold:       #C9A84C;
   --gold-light: #F0D080;
-  --gold-dark: #8B6914;
-  --black: #080808;
-  --black-card: #111111;
+  --gold-dark:  #8B6914;
+  --black:      #080808;
   --text-cream: #F5E6C8;
+}
+
+/* Desktop — hide default cursor */
+@media (hover: hover) and (pointer: fine) {
+  body { cursor: none !important; }
+  * { cursor: none !important; }
+}
+
+/* Mobile/touch — show normal cursor */
+@media (hover: none), (pointer: coarse) {
+  body { cursor: auto !important; }
+  * { cursor: auto !important; }
 }
 
 body {
@@ -17,29 +28,18 @@ body {
   font-family: 'IM Fell English', serif;
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: none;
 }
 
-@media (max-width: 768px) {
-  body { cursor: auto !important; }
-  * { cursor: auto !important; }
-}
-
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar       { width: 6px; }
 ::-webkit-scrollbar-track { background: #0A0A0A; }
 ::-webkit-scrollbar-thumb { background: #8B6914; border-radius: 3px; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-18px) rotate(3deg); }
-}
-
-@keyframes wandGlow {
-  0%, 100% { box-shadow: 0 0 6px 2px #F0D080, 0 0 14px 4px #C9A84C88; }
-  50% { box-shadow: 0 0 12px 5px #FFFFFF, 0 0 28px 10px #F0D080, 0 0 40px 16px #C9A84C66; }
+  50%       { transform: translateY(-18px) rotate(3deg); }
 }
 
 @keyframes starTwinkle {
   0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+  50%       { opacity: 1;   transform: scale(1.2); }
 }
