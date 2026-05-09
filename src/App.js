@@ -6,6 +6,7 @@ import Signup       from './pages/Signup';
 import Dashboard    from './pages/Dashboard';
 import LearningPath from './pages/LearningPath';
 import Profile      from './pages/Profile';
+import CursorFX     from './components/CursorFX';
 import './App.css';
 
 function PrivateRoute({ children }) {
@@ -15,6 +16,8 @@ function PrivateRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      {/* Sparkling cursor on desktop, tap-burst on mobile — handled inside CursorFX */}
+      <CursorFX />
       <Routes>
         <Route path="/"              element={<Landing />} />
         <Route path="/login"         element={<Login />} />
