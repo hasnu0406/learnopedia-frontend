@@ -11,18 +11,10 @@
   --text-cream: #F5E6C8;
 }
 
-/* ── Hide system cursor on desktop using SVG data URI ──
-   url() cursors are ALWAYS respected by browsers, unlike cursor:none
-   which some browsers ignore on buttons, inputs and links.           */
-html, html *, html *::before, html *::after {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E") 0 0, none !important;
-}
+html, body, * { cursor: none !important; }
 
-/* ── Restore normal cursor on mobile ── */
-@media (max-width: 768px) {
-  html, html *, html *::before, html *::after {
-    cursor: auto !important;
-  }
+@media (hover: none) and (pointer: coarse) {
+  html, body, * { cursor: auto !important; }
 }
 
 body {
@@ -39,15 +31,13 @@ body {
 
 @keyframes float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-18px) rotate(3deg); }
+  50%       { transform: translateY(-18px) rotate(3deg); }
 }
-
 @keyframes wandGlow {
   0%, 100% { box-shadow: 0 0 6px 2px #F0D080, 0 0 14px 4px #C9A84C88; }
-  50% { box-shadow: 0 0 12px 5px #FFFFFF, 0 0 28px 10px #F0D080, 0 0 40px 16px #C9A84C66; }
+  50%       { box-shadow: 0 0 12px 5px #FFFFFF, 0 0 28px 10px #F0D080, 0 0 40px 16px #C9A84C66; }
 }
-
 @keyframes starTwinkle {
   0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
+  50%       { opacity: 1;   transform: scale(1.2); }
 }
