@@ -16,7 +16,6 @@ function PrivateRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Sparkling cursor — gold dot + trail on desktop, tap burst on mobile */}
       <CursorFX />
       <Routes>
         <Route path="/"              element={<Landing />} />
