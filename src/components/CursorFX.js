@@ -14,6 +14,45 @@ export default function CursorFX() {
       navigator.maxTouchPoints > 0 ||
       window.innerWidth <= 768;
 
+    /* ── Force cursor:none via JS on every element — same as what works in console ── */
+    if (!isMobile) {
+      document.body.style.setProperty('cursor', 'none', 'important');
+      document.documentElement.style.setProperty('cursor', 'none', 'important');
+
+      /* Also cover dynamically added elements via MutationObserver */
+      const hideOnNode = (node) => {
+        if (node.style) node.style.setProperty('cursor', 'none', 'important');
+      };
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(m => m.addedNodes.forEach(n => {
+          hideOnNode(n);
+          if (n.querySelectorAll) n.querySelectorAll('*').forEach(hideOnNode);
+        }));
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      /* Cover all existing elements */
+      document.querySelectorAll('*').forEach(hideOnNode);
+
+      /* Keep enforcing on mouseover so hover states can't override */
+      const forceHide = (e) => {
+        if (e.target && e.target.style) {
+          e.target.style.setProperty('cursor', 'none', 'important');
+        }
+      };
+      document.addEventListener('mouseover', forceHide);
+
+      /* Cleanup */
+      const cleanup = () => {
+        observer.disconnect();
+        document.removeEventListener('mouseover', forceHide);
+        document.body.style.removeProperty('cursor');
+        document.documentElement.style.removeProperty('cursor');
+      };
+      dotRef.current._cleanup = cleanup;
+    }
+
+    /* ── Inject sparkle keyframes ── */
     const style = document.createElement('style');
     style.id = 'cfx-style';
     style.textContent = `
@@ -33,22 +72,23 @@ export default function CursorFX() {
 
     const dot = dotRef.current;
 
+    /* ── Spawn a sparkle ── */
     function spawnParticle(x, y, big) {
       const color = GOLD[Math.floor(Math.random() * GOLD.length)];
       const angle = Math.random() * Math.PI * 2;
       const dist  = big ? 40 + Math.random() * 70 : 20 + Math.random() * 40;
       const size  = big ? 5  + Math.random() * 7  : 3  + Math.random() * 5;
       const dur   = (big ? 0.6 + Math.random() * 0.4 : 0.4 + Math.random() * 0.3).toFixed(2);
-      const el = document.createElement('div');
+      const el    = document.createElement('div');
       el.className = 'cfx-particle';
       el.style.cssText = `
-        left: ${x}px; top: ${y}px;
-        width: ${size}px; height: ${size}px;
-        background: ${color};
-        box-shadow: 0 0 ${size * 2}px ${size}px ${color};
-        --tx: ${(Math.cos(angle) * dist).toFixed(1)}px;
-        --ty: ${(Math.sin(angle) * dist).toFixed(1)}px;
-        --dur: ${dur}s;
+        left:${x}px; top:${y}px;
+        width:${size}px; height:${size}px;
+        background:${color};
+        box-shadow:0 0 ${size*2}px ${size}px ${color};
+        --tx:${(Math.cos(angle)*dist).toFixed(1)}px;
+        --ty:${(Math.sin(angle)*dist).toFixed(1)}px;
+        --dur:${dur}s;
       `;
       document.body.appendChild(el);
       setTimeout(() => el.remove(), parseFloat(dur) * 1000 + 100);
@@ -58,6 +98,7 @@ export default function CursorFX() {
       for (let i = 0; i < count; i++) spawnParticle(x, y, big);
     }
 
+    /* ── Events ── */
     const onMove = (e) => {
       dot.style.left = e.clientX + 'px';
       dot.style.top  = e.clientY + 'px';
@@ -69,8 +110,8 @@ export default function CursorFX() {
     };
 
     if (!isMobile) {
-      document.addEventListener('mousemove', onMove,  { passive: true });
-      document.addEventListener('click',     onClick);
+      document.addEventListener('mousemove',  onMove,  { passive: true });
+      document.addEventListener('click',      onClick);
     } else {
       document.addEventListener('touchstart', onTouch, { passive: true });
     }
@@ -80,6 +121,7 @@ export default function CursorFX() {
       document.removeEventListener('click',      onClick);
       document.removeEventListener('touchstart', onTouch);
       document.getElementById('cfx-style')?.remove();
+      if (dotRef.current?._cleanup) dotRef.current._cleanup();
     };
   }, []);
 
@@ -90,15 +132,15 @@ export default function CursorFX() {
         position:     'fixed',
         top:          '-20px',
         left:         '-20px',
-        width:        16,
-        height:       16,
-        marginLeft:   -8,
-        marginTop:    -8,
+        width:        '16px',
+        height:       '16px',
+        marginLeft:   '-8px',
+        marginTop:    '-8px',
         borderRadius: '50%',
         background:   'radial-gradient(circle, #FFFFFF 0%, #FFD700 45%, #D4AF37 100%)',
         boxShadow:    '0 0 10px 4px #FFD700, 0 0 24px 8px rgba(212,175,55,0.7)',
         pointerEvents:'none',
-        zIndex:       999999,
+        zIndex:       '999999',
       }}
     />
   );
