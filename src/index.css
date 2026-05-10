@@ -11,12 +11,6 @@
   --text-cream: #F5E6C8;
 }
 
-html, body, * { cursor: none !important; }
-
-@media (hover: none) and (pointer: coarse) {
-  html, body, * { cursor: auto !important; }
-}
-
 body {
   background-color: var(--black);
   color: var(--text-cream);
