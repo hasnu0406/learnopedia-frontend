@@ -9,48 +9,47 @@ const GOLD_COLORS = [
 const BLANK =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E\") 0 0, none";
 
-const isMobileDevice = () =>
-  'ontouchstart' in window ||
-  navigator.maxTouchPoints > 0 ||
-  window.innerWidth <= 768;
-
 export default function CursorFX() {
   const canvasRef = useRef(null);
-  const cursorRef = useRef(null);
+  const dotRef    = useRef(null);
   const particles = useRef([]);
   const rafRef    = useRef(null);
-  const mobile    = useRef(false);
+  const posX      = useRef(-300);
+  const posY      = useRef(-300);
 
   useEffect(() => {
-    mobile.current = isMobileDevice();
+    const isMobile =
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.innerWidth <= 768;
 
-    /* ─── blank system cursor on desktop only ─── */
+    /* ── blank system cursor on desktop ── */
     const tag = document.createElement('style');
-    tag.id = 'cursorfx-css';
-    tag.textContent = !mobile.current
-      ? `html, html *, html *::before, html *::after { cursor: ${BLANK} !important; }`
-      : '';
+    tag.id = 'cfx';
+    tag.textContent = isMobile
+      ? ''
+      : `html,html *,html *::before,html *::after{cursor:${BLANK}!important}`;
     document.head.appendChild(tag);
 
-    /* ─── canvas ─── */
+    /* ── dot visibility ── */
+    const dot = dotRef.current;
+    if (isMobile) {
+      dot.style.display = 'none';
+    } else {
+      dot.style.display = 'block';
+    }
+
+    /* ── canvas ── */
     const canvas = canvasRef.current;
     const ctx    = canvas.getContext('2d');
     const resize = () => {
       canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
-      mobile.current = isMobileDevice();
-      tag.textContent = !mobile.current
-        ? `html, html *, html *::before, html *::after { cursor: ${BLANK} !important; }`
-        : '';
-      // hide/show cursor div on resize
-      if (cursorRef.current) {
-        cursorRef.current.style.display = mobile.current ? 'none' : 'block';
-      }
     };
     resize();
     window.addEventListener('resize', resize);
 
-    /* ─── particles ─── */
+    /* ── spawn particles ── */
     function spawn(x, y, count, big) {
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -60,7 +59,8 @@ export default function CursorFX() {
           x, y,
           vx:       Math.cos(angle) * speed,
           vy:       Math.sin(angle) * speed - (big ? 1.4 : 0.8),
-          alpha:    1, size,
+          alpha:    1,
+          size,
           color:    GOLD_COLORS[Math.floor(Math.random() * GOLD_COLORS.length)],
           isStar:   Math.random() > 0.4,
           rotation: Math.random() * Math.PI * 2,
@@ -88,24 +88,24 @@ export default function CursorFX() {
       ctx.restore();
     }
 
-    /* ─── RAF loop ─── */
+    /* ── RAF loop ── */
     let frame = 0;
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
 
-      if (!mobile.current && frame % 2 === 0) {
-        const el = cursorRef.current;
-        if (el) {
-          const x = parseFloat(el.dataset.x || -300);
-          const y = parseFloat(el.dataset.y || -300);
-          spawn(x + (Math.random() - 0.5) * 6, y + (Math.random() - 0.5) * 6, 2, false);
-        }
+      if (!isMobile && frame % 2 === 0) {
+        spawn(
+          posX.current + (Math.random() - 0.5) * 6,
+          posY.current + (Math.random() - 0.5) * 6,
+          2, false,
+        );
       }
 
       particles.current = particles.current.filter(p => p.alpha > 0.01);
       for (const p of particles.current) {
-        p.x += p.vx; p.y += p.vy;
+        p.x        += p.vx;
+        p.y        += p.vy;
         p.vy       += p.gravity;
         p.vx       *= 0.97;
         p.alpha    -= p.decay;
@@ -115,9 +115,13 @@ export default function CursorFX() {
         ctx.fillStyle   = p.color;
         ctx.shadowBlur  = 10;
         ctx.shadowColor = '#D4AF37';
-        p.isStar
-          ? drawStar(p.x, p.y, p.size * 1.1, p.rotation)
-          : (ctx.beginPath(), ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2), ctx.fill());
+        if (p.isStar) {
+          drawStar(p.x, p.y, p.size * 1.1, p.rotation);
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.shadowBlur  = 0;
         ctx.globalAlpha = 1;
       }
@@ -125,27 +129,29 @@ export default function CursorFX() {
       rafRef.current = requestAnimationFrame(loop);
     };
 
-    /* ─── events ─── */
+    /* ── mouse events (desktop) ── */
     const onMove = (e) => {
-      const el = cursorRef.current;
-      if (el && !mobile.current) {
-        // centre the 12px circle on the pointer
-        el.style.transform = `translate(${e.clientX - 6}px, ${e.clientY - 6}px)`;
-        el.dataset.x = e.clientX;
-        el.dataset.y = e.clientY;
-      }
+      posX.current = e.clientX;
+      posY.current = e.clientY;
+      dot.style.transform = `translate(${e.clientX - 6}px,${e.clientY - 6}px)`;
       spawn(e.clientX, e.clientY, 2, false);
     };
     const onClick = (e) => spawn(e.clientX, e.clientY, 20, false);
+
+    /* ── touch event (mobile) ── */
     const onTouch = (e) => {
       Array.from(e.changedTouches).forEach(t =>
         spawn(t.clientX, t.clientY, 28, true)
       );
     };
 
-    document.addEventListener('mousemove',  onMove,  { passive: true });
-    document.addEventListener('click',      onClick);
-    document.addEventListener('touchstart', onTouch, { passive: true });
+    if (!isMobile) {
+      document.addEventListener('mousemove', onMove,  { passive: true });
+      document.addEventListener('click',     onClick);
+    } else {
+      document.addEventListener('touchstart', onTouch, { passive: true });
+    }
+
     rafRef.current = requestAnimationFrame(loop);
 
     return () => {
@@ -154,13 +160,12 @@ export default function CursorFX() {
       document.removeEventListener('touchstart', onTouch);
       window.removeEventListener('resize',       resize);
       cancelAnimationFrame(rafRef.current);
-      document.getElementById('cursorfx-css')?.remove();
+      document.getElementById('cfx')?.remove();
     };
   }, []);
 
   return (
     <>
-      {/* sparkle canvas */}
       <canvas
         ref={canvasRef}
         style={{
@@ -173,24 +178,23 @@ export default function CursorFX() {
           zIndex:        999998,
         }}
       />
-
-      {/* small gold circle — desktop only, hidden on mobile */}
+      {/* dot renders with display:none first, useEffect sets it to block on desktop */}
       <div
-        ref={cursorRef}
+        ref={dotRef}
         style={{
-          display:       isMobileDevice() ? 'none' : 'block',
-          position:      'fixed',
-          top:           0,
-          left:          0,
-          width:         12,
-          height:        12,
-          borderRadius:  '50%',
-          background:    'radial-gradient(circle, #FFFFFF 0%, #FFD700 60%, #D4AF37 100%)',
-          boxShadow:     '0 0 6px 2px #FFD700, 0 0 14px 5px rgba(212,175,55,0.5)',
-          pointerEvents: 'none',
-          zIndex:        999999,
-          willChange:    'transform',
-          transform:     'translate(-300px, -300px)',
+          display:      'none',
+          position:     'fixed',
+          top:          0,
+          left:         0,
+          width:        12,
+          height:       12,
+          borderRadius: '50%',
+          background:   'radial-gradient(circle, #FFFFFF 0%, #FFD700 55%, #D4AF37 100%)',
+          boxShadow:    '0 0 6px 3px #FFD700, 0 0 16px 6px rgba(212,175,55,0.55)',
+          pointerEvents:'none',
+          zIndex:       999999,
+          willChange:   'transform',
+          transform:    'translate(-300px,-300px)',
         }}
       />
     </>

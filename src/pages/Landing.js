@@ -59,8 +59,8 @@ export default function Landing() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => navigate('/login')}   style={navBtn(false, isMobile)}>Sign In</button>
-          <button onClick={() => navigate('/signup')}  style={navBtn(true, isMobile)}>⚡ Enrol</button>
+          <button onClick={() => navigate('/login')}  style={navBtn(false, isMobile)}>Sign In</button>
+          <button onClick={() => navigate('/signup')} style={navBtn(true,  isMobile)}>⚡ Enrol</button>
         </div>
       </nav>
 
@@ -72,7 +72,7 @@ export default function Landing() {
         textAlign: 'center',
         padding: isMobile ? '40px 20px 60px' : '60px 24px',
       }}>
-        {/* Spell */}
+        {/* Rotating spell */}
         <div style={{
           fontFamily: "'IM Fell English', serif",
           fontSize: isMobile ? '13px' : '16px', fontStyle: 'italic',
@@ -103,8 +103,7 @@ export default function Landing() {
           fontWeight: 900,
           background: 'linear-gradient(135deg, #8B6914 0%, #C9A84C 30%, #F0D080 50%, #C9A84C 70%, #8B6914 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          lineHeight: 1.25, maxWidth: '820px',
-          marginBottom: '24px',
+          lineHeight: 1.25, maxWidth: '820px', marginBottom: '24px',
         }}>
           Your Magical Learning Journey Begins Here
         </h1>
@@ -121,14 +120,16 @@ export default function Landing() {
           lineHeight: 1.9, marginBottom: isMobile ? '36px' : '52px',
           padding: isMobile ? '0 8px' : '0',
         }}>
-          Like a Hogwarts letter that finds you, our AI discovers the perfect courses and learning paths crafted for your unique abilities and ambitions.
+          Like a Hogwarts letter that finds you, our AI discovers the perfect courses and
+          learning paths crafted for your unique abilities and ambitions.
         </p>
 
+        {/* Buttons */}
         <div style={{
           display: 'flex', gap: '14px', flexWrap: 'wrap',
           justifyContent: 'center', marginBottom: '60px',
         }}>
-          <button onClick={() => navigate('/signup')} style={heroBtn(true, isMobile)}>
+          <button onClick={() => navigate('/signup')} style={heroBtn(true,  isMobile)}>
             🪄 Begin Your Journey
           </button>
           <button onClick={() => navigate('/login')}  style={heroBtn(false, isMobile)}>
@@ -136,14 +137,14 @@ export default function Landing() {
           </button>
         </div>
 
-        {/* House cards — hide on mobile */}
+        {/* House cards — desktop only */}
         {!isMobile && (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
             {[
-              { icon:'🦁', house:'Gryffindor', trait:'Brave & Determined',  color:'#C9A84C', bg:'#6B0F1A' },
-              { icon:'🦅', house:'Ravenclaw',  trait:'Wise & Curious',       color:'#9BB0D0', bg:'#0D1B2A' },
-              { icon:'🦡', house:'Hufflepuff', trait:'Patient & Loyal',      color:'#F0C040', bg:'#3A2A0A' },
-              { icon:'🐍', house:'Slytherin',  trait:'Ambitious & Clever',   color:'#80B080', bg:'#1A3A2A' },
+              { icon: '🦁', house: 'Gryffindor', trait: 'Brave & Determined', color: '#C9A84C', bg: '#6B0F1A' },
+              { icon: '🦅', house: 'Ravenclaw',  trait: 'Wise & Curious',      color: '#9BB0D0', bg: '#0D1B2A' },
+              { icon: '🦡', house: 'Hufflepuff', trait: 'Patient & Loyal',     color: '#F0C040', bg: '#3A2A0A' },
+              { icon: '🐍', house: 'Slytherin',  trait: 'Ambitious & Clever',  color: '#80B080', bg: '#1A3A2A' },
             ].map(h => (
               <div key={h.house} style={{
                 background: `linear-gradient(135deg, ${h.bg}CC, #111)`,
@@ -152,22 +153,81 @@ export default function Landing() {
                 textAlign: 'center', width: '160px',
               }}>
                 <div style={{ fontSize: '32px', marginBottom: '10px' }}>{h.icon}</div>
-                <div style={{ fontFamily:"'Cinzel',serif", fontSize:'13px', color:h.color, marginBottom:'6px' }}>{h.house}</div>
-                <div style={{ fontFamily:"'IM Fell English',serif", fontSize:'13px', fontStyle:'italic', color:'#7A6A4A' }}>{h.trait}</div>
+                <div style={{ fontFamily: "'Cinzel',serif", fontSize: '13px', color: h.color, marginBottom: '6px' }}>{h.house}</div>
+                <div style={{ fontFamily: "'IM Fell English',serif", fontSize: '13px', fontStyle: 'italic', color: '#7A6A4A' }}>{h.trait}</div>
               </div>
             ))}
           </div>
         )}
       </div>
 
+      {/* ── Footer ── */}
       <div style={{
         position: 'relative', zIndex: 10,
-        textAlign: 'center', padding: '20px',
-        borderTop: '1px solid #C9A84C11',
-        fontFamily: "'IM Fell English', serif",
-        fontSize: '12px', fontStyle: 'italic', color: '#C9A84C33',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center',
+        padding: '28px 20px 32px',
+        borderTop: '1px solid #C9A84C22',
+        background: 'linear-gradient(180deg, transparent, #0D0A0A)',
+        gap: '16px',
       }}>
-        "Happiness can be found even in the darkest of times" — Albus Dumbledore
+
+        {/* Dumbledore quote */}
+        <p style={{
+          fontFamily: "'IM Fell English', serif",
+          fontSize: isMobile ? '11px' : '13px',
+          fontStyle: 'italic',
+          color: '#C9A84C55',
+          letterSpacing: '1px',
+          textAlign: 'center',
+        }}>
+          "Happiness can be found even in the darkest of times" — Albus Dumbledore
+        </p>
+
+        {/* Divider */}
+        <div style={{
+          width: '120px', height: '1px',
+          background: 'linear-gradient(90deg, transparent, #C9A84C44, transparent)',
+        }} />
+
+        {/* Developer credit — prominent, styled like a badge */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'linear-gradient(135deg, #111008, #0D0A0A)',
+          border: '1px solid #C9A84C33',
+          borderRadius: '40px',
+          padding: isMobile ? '8px 20px' : '10px 28px',
+          boxShadow: '0 0 18px #C9A84C11',
+        }}>
+          <span style={{ fontSize: isMobile ? '14px' : '16px' }}>⚡</span>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{
+              fontFamily: "'Cinzel', serif",
+              fontSize: isMobile ? '8px' : '9px',
+              letterSpacing: '3px',
+              color: '#C9A84C77',
+              textTransform: 'uppercase',
+              marginBottom: '3px',
+            }}>
+              Crafted with magic by
+            </div>
+            <div style={{
+              fontFamily: "'Cinzel Decorative', cursive",
+              fontSize: isMobile ? '12px' : '15px',
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #8B6914, #C9A84C, #F0D080, #C9A84C, #8B6914)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              letterSpacing: '1px',
+            }}>
+              Hasna Mubarak Azeem
+            </div>
+          </div>
+          <span style={{ fontSize: isMobile ? '14px' : '16px' }}>⚡</span>
+        </div>
+
       </div>
     </div>
   );
